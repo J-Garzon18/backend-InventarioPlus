@@ -15,6 +15,7 @@ const PORT=process.env.PORT || 3000
 //Rutas: 
 app.use("/api/usuarios",registroUsuario)
 
+console.log("MONGO_URI:", process.env.MONGO_URI);
 
 
 //conexion a mongoose

@@ -1,4 +1,4 @@
-import usuarioModel from "../models/usuarioModel";
+import usuarioModel from "../models/usuarioModel.js";
 
 const registroUsuario = async (req,res)=>{
     try{
@@ -54,4 +54,46 @@ const registroUsuario = async (req,res)=>{
   }
 };
 
-export default {registroUsuario}
+// Login / inicio de Sesion
+const loginUsuario=async(req,res)=>{
+  try{
+    const {user_email,user_password} =req.body;
+    if(!user_email || !user_password){
+      return res.status(400).json({
+        code:400,
+        message:"Se requiere email y contraseña",
+        status:"false",
+      });
+    }
+    //Buscar email y contraseña
+    const usuario= await usuarioModel.findOne({
+      user_email:user_email,
+      user_password:user_password,
+    });
+    if(!usuario){
+      return res.status(401).json({
+        code:401,
+        message:"Email o contraseña incorrectos",
+        status:false,
+      });
+    }
+    //Login Exitoso
+  return res.status(401).json({
+    code:401,
+    message:"Inicio de sesion exitosa",
+    user:usuario,
+    status:true,
+  });
+
+  } catch(error){
+    console.error("Error al iniciar sesion:",error);
+    return res.status(500).json({
+      code:500,
+      message:"Error interno del servidor",
+      status:false,
+    });
+  }
+};
+
+
+export default {registroUsuario,loginUsuario}
