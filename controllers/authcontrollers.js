@@ -2,9 +2,9 @@ import usuarioModel from "../models/usuarioModel.js";
 
 const registroUsuario = async (req,res)=>{
     try{
-       const {user_id,user_name,user_email,user_password} = req.body
+       const {user_name,user_email,user_password} = req.body
 
-       if(!user_id || !user_name || !user_email || !user_password){    //Valida que se llenaron todos los campos.
+       if(!user_name || !user_email || !user_password){    //Valida que se llenaron todos los campos.
           return res.status(400).json({
         code: 400,
         message: "Se requiere todos los campos user_id",
@@ -15,7 +15,7 @@ const registroUsuario = async (req,res)=>{
     //Validar que no exista otro usuario con el mismo ID o email. 
     const existingUser = await usuarioModel.findOne({
       $or: [
-        {user_id:user_id},
+       
         {user_email:user_email}
       ]
     });
@@ -29,7 +29,6 @@ const registroUsuario = async (req,res)=>{
     
         // Crear nuevo usuario
     const nuevoUser = new usuarioModel({
-      user_id,
       user_name,
       user_email,
       user_password, 
@@ -70,7 +69,7 @@ const loginUsuario=async(req,res)=>{
       user_email:user_email,
       user_password:user_password,
     });
-    if(!usuario){
+    if(!user_email || !user_email){
       return res.status(401).json({
         code:401,
         message:"Email o contraseña incorrectos",

@@ -12,7 +12,7 @@ app.use(express.json()); // Sirve para leer el requ.body
 
 const PORT=process.env.PORT || 3000
 
-//Rutas: 
+//Rutas: 127.0.0.1:3000/api/usuarios/registro
 app.use("/api/usuarios",registroUsuario)
 
 console.log("MONGO_URI:", process.env.MONGO_URI);
