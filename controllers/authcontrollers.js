@@ -7,7 +7,7 @@ const registroUsuario = async (req,res)=>{
        if(!user_name || !user_email || !user_password){    //Valida que se llenaron todos los campos.
           return res.status(400).json({
         code: 400,
-        message: "Se requiere todos los campos user_id",
+        message: "Se requiere todos los campos obligatorios.",
         status: false
       });
     }
@@ -52,47 +52,49 @@ const registroUsuario = async (req,res)=>{
     });
   }
 };
+// login usuario
+const loginUsuario = async (req, res) => {
+  try {
+    const { user_email, user_password } = req.body;
 
-// Login / inicio de Sesion
-const loginUsuario=async(req,res)=>{
-  try{
-    const {user_email,user_password} =req.body;
-    if(!user_email || !user_password){
+    if (!user_email || !user_password) {
       return res.status(400).json({
-        code:400,
-        message:"Se requiere email y contraseña",
-        status:"false",
+        code: 400,
+        message: "Se requiere email y contraseña",
+        status: false,
       });
     }
-    //Buscar email y contraseña
-    const usuario= await usuarioModel.findOne({
-      user_email:user_email,
-      user_password:user_password,
-    });
-    if(!user_email || !user_email){
-      return res.status(401).json({
-        code:401,
-        message:"Email o contraseña incorrectos",
-        status:false,
-      });
-    }
-    //Login Exitoso
-  return res.status(401).json({
-    code:401,
-    message:"Inicio de sesion exitosa",
-    user:usuario,
-    status:true,
-  });
 
-  } catch(error){
-    console.error("Error al iniciar sesion:",error);
+    // Buscar usuario en la base de datos
+    const usuario = await usuarioModel.findOne({ user_email });
+
+    // Si no existe o la contraseña no coincide
+    if (!usuario || usuario.user_password !== user_password) {
+      return res.status(401).json({
+        code: 401,
+        message: "Email o contraseña incorrectos",
+        status: false,
+      });
+    }
+
+    // Login exitoso
+    return res.status(200).json({
+      code: 200,
+      message: "Inicio de sesión exitoso",
+      user: usuario,
+      status: true,
+    });
+
+  } catch (error) {
+    console.error("Error al iniciar sesión:", error);
     return res.status(500).json({
-      code:500,
-      message:"Error interno del servidor",
-      status:false,
+      code: 500,
+      message: "Error interno del servidor",
+      status: false,
     });
   }
 };
+
 
 
 export default {registroUsuario,loginUsuario}
